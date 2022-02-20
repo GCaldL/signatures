@@ -41,7 +41,6 @@ with open('list.csv', 'r') as read_obj:
 
         base = base.replace('@@@name', name)
         base = base.replace('@@@role', position)
-
         base = base.replace('@@@phone', tphone)
         base = base.replace('@@@mobile', '')
         base = base.replace('@@@email', temail)
