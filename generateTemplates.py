@@ -3,7 +3,7 @@ import email
 
 open('all.html', 'w').close()
 
-with open('staff2.csv', 'r') as read_obj:
+with open('list.csv', 'r') as read_obj:
     stafflist = reader(read_obj)
     for row in stafflist:
         name = row[1]
