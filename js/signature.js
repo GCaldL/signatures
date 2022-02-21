@@ -2,7 +2,7 @@ let template =
 {
     base: "<html> \
     <body style=\'font-family:Roboto,RobotoDraft,Helvetica,Arial,sans-serif;\'> \
-        <table id=\'signatureGEN\' style=\'width: 600px;\'><tr> \
+        <table id=\'signatureGEN\'><tr> \
             <td style=\'width: 25%;\'> \
                 <img src=\'https://www.faithcsde.com/img/logos/faithlogo-sm.png\' style=\'width: 90%; margin-left: 10%;\'> \
             </td> \
