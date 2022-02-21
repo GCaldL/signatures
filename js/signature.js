@@ -2,7 +2,7 @@ let template =
 {
     base: "<html> \
     <body style=\'font-family:Roboto,RobotoDraft,Helvetica,Arial,sans-serif;\'> \
-        <table style=\'width: 600px;\'><tr> \
+        <table id=\'signatureGEN\' style=\'width: 600px;\'><tr> \
             <td style=\'width: 25%;\'> \
                 <img src=\'https://www.faithcsde.com/img/logos/faithlogo-sm.png\' style=\'width: 90%; margin-left: 10%;\'> \
             </td> \
@@ -22,8 +22,6 @@ let template =
                 </span> \
             </td> \
         </tr></table> \
-        <br> \
-        <br> \
     </body> \
     </html>",
     phone: "<span style=\'display:inline-block\'> \
@@ -42,46 +40,86 @@ let template =
     </span>",
     site: "<span style=\'display:inline-block\'> \
     <img style=\'margin-bottom: -5px;\' src=\'https://www.faithcsde.com/storage/uploaded_files/signature/site.png\'/> \
-    <a style=\'color: #45668E;\'href=\'https://www.faithcsde.com/\'>faithcsde.com</a> \
+    <a style=\'color: #45668E;\'href=\'https://@@@temp/\'>@@@temp</a> \
     </span> \
     <strong>|</strong>",
     address: "<span style=\'display:inline-block\'> \
     <img style=\'margin-bottom: -5px;\' src=\'https://www.faithcsde.com/storage/uploaded_files/signature/location.png\'/> \
-    <a style=\'color: #45668E;\'href=\'https://www.google.com/maps?q=PO+Box+105,+Kingston+4114\'>PO Box 105, Kingston 4114</a> \
+    <a style=\'color: #45668E;\'href=\'https://www.google.com/maps?q=@@@temp\'>@@@temp</a> \
     </span>"
 };
 
-
+navigator.permissions.query({
+    name: 'clipboard-write'
+  })
+  .then((permissionObj) => {
+    console.log(permissionObj);
+    // ... check the permission object ...
+  })
+  .catch((error) => {
+    // couldn't query the permission
+    console.error(error);
+  });
 function replaceTemplateFields(temp, after){
-    if (after != null){
-        temp.replaceAll("@@@temp", after);
+    if (after != ''){
+        temp = temp.replaceAll("@@@temp", after);
     } else {
-        temp.replaceAll("@@@temp", "");
+        temp = "";
     }
+
     return temp;
 }
 
 function generateTemplate(name, role, phone, mobile, email, site, address) {
-    phonet = replaceTemplateFields(template.phone, phone);
-    mobilet = replaceTemplateFields(template.mobile, mobile);
-    emailt = replaceTemplateFields(template.email, email);
-    sitet = replaceTemplateFields(template.site, site);
-    addresst = replaceTemplateFields(template.address, address);
+    let phonet = replaceTemplateFields(template.phone, phone);
+    let mobilet = replaceTemplateFields(template.mobile, mobile);
+    let emailt = replaceTemplateFields(template.email, email);
+    let sitet = replaceTemplateFields(template.site, site);
+    let addresst = replaceTemplateFields(template.address, address);
 
-    return template.base.replace("@@@name", name)
+    return template.base
+    .replace("@@@name", name)
     .replace("@@@role", role)
     .replace("@@@phone", phonet)
-    .replace("@@@mobile", mobilt)
+    .replace("@@@mobile", mobilet)
     .replace("@@@email", emailt)
     .replace("@@@site", sitet)
     .replace("@@@address", addresst);
 }
 
-console.log("test")
+let signature = generateTemplate(
+    $("#name").val(),
+    $("#role").val(),
+    $("#ph").val(),
+    $("#mb").val(),
+    $("#em").val(),
+    $("#site").val(),
+    $("#address").val());
+$("#signatureGEN").replaceWith(signature);
+
 
 //I can't be effed checking specific el for update, just update the freaking thing regardless :)
 $("*").on('change keyup paste', function () {
-    let signature = generateTemplate("Geoff", "lol k", "04", "04", "g@g.co",);
+    let signature = generateTemplate(
+        $("#name").val(),
+        $("#role").val(),
+        $("#ph").val(),
+        $("#mb").val(),
+        $("#em").val(),
+        $("#site").val(),
+        $("#address").val());
     $("#signatureGEN").replaceWith(signature);
-    console.log(signature);
+
+    var type = "text/html";
+    var blob = new Blob([signature], { type });
+    var data = [new ClipboardItem({ [type]: blob })];
+
+    navigator.clipboard.write(data).then(
+        function () {
+        console.log("signature copied to clipboard!");
+        },
+        function () {
+        console.log("paste to clipboard failed :(");
+        }
+    );
 });
