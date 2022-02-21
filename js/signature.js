@@ -52,17 +52,36 @@ let template =
 };
 
 
-function generateTemplate(name, role, wp, mp, em, site, address) {
-    phonet = template.phone.replace("@@@temp", wp);
-    mobilt = template.mobile.replace("@@@temp", mp);
-    emailt = template.email.replace("@@@temp", em);
+function replaceTemplateFields(temp, after){
+    if (after != null){
+        temp.replaceAll("@@@temp", after);
+    } else {
+        temp.replaceAll("@@@temp", "");
+    }
+    return temp;
+}
 
-    return template.base.replace("@@@name", name).replace("@@@role", role).replace("@@@phone", phonet).replace("@@@mobile", mobilt).replace("@@@email", emailt);
+function generateTemplate(name, role, phone, mobile, email, site, address) {
+    phonet = replaceTemplateFields(template.phone, phone);
+    mobilet = replaceTemplateFields(template.mobile, mobile);
+    emailt = replaceTemplateFields(template.email, email);
+    sitet = replaceTemplateFields(template.site, site);
+    addresst = replaceTemplateFields(template.address, address);
+
+    return template.base.replace("@@@name", name)
+    .replace("@@@role", role)
+    .replace("@@@phone", phonet)
+    .replace("@@@mobile", mobilt)
+    .replace("@@@email", emailt)
+    .replace("@@@site", sitet)
+    .replace("@@@address", addresst);
 }
 
 console.log("test")
 
 //I can't be effed checking specific el for update, just update the freaking thing regardless :)
 $("*").on('change keyup paste', function () {
-    console.log(generateTemplate("Geoff", "lol k", "04", "04", "g@g.co",));
+    let signature = generateTemplate("Geoff", "lol k", "04", "04", "g@g.co",);
+    $("#signatureGEN").replaceWith(signature);
+    console.log(signature);
 });
